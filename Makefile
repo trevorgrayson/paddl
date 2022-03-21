@@ -19,6 +19,18 @@ $(VENV): requirements.txt
 	$(PYTHON) -m pip install -q -t $(VENV) -r requirements.txt
 	touch $(VENV)
 
+
+package: compile
+	rm -rf dist
+	@echo "$(VERSION_NEW)" | sed -e s/v// > VERSION
+	# git tag "$(VERSION_NEW)"
+	$(PYTHON) setup.py sdist
+
+publish: package
+	$(PYTHON) -m twine upload dist/* || echo "ERROR: pushing to pypi. Already uploaded?"
+	# git push --tags
+
+
 clean:
 	find . -name "*.pyc" -delete
 	rm -rf `find . -name __pycache__`
