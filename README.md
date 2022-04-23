@@ -22,3 +22,10 @@ column = table.columns[0]
 column.name == 'id'
 column.type == ColType.INT
 ```
+
+## command line
+
+```sh
+> python -m paddl
+usage: paddl [-h] [--erd] sql
+```

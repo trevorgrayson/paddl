@@ -1,6 +1,10 @@
 import os
 import setuptools
 from distutils.core import setup
+from pathlib import Path
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 
 REQUIRED = ['pyparsing']
@@ -12,39 +16,14 @@ EXTRAS = {
 
 setup(
     name='paddl',
-    version='0.1.0',  # open("VERSION", "r").read(),
+    version='0.1.1',  # open("VERSION", "r").read(),
     packages=setuptools.find_packages(),
     # ['telemetry',],
     package_data={'': ['README.md', 'VERSION']},
     #package_dir={ 'telemetry': 'src/telemetry' },
     description="Parse Any DDL",
-    long_description="""
-# paddl: Parse Any DDL
-
-Parse DDLs into objects using python. 
-
-Ambitious title, supported SQL languages include:
-
-- Rudamentary `CREATE TABLE` implemented, pursuing MySQL 8 first.
-
-
-```python
-from paddl import parse, ColType
-
-schema = parse("CREATE TABLE employees (id int, name varchar(255));", 'mysql')
-table = schema.tables[0]
-
-table.name 
-# "employees"
-
-table.columns
-
-column = table.columns[0]
-column.name == 'id'
-column.type == ColType.INT
-```
-    """, # open("README.md", "r").read(),
     # long_description=open('README2.0.md').read(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
     author='trevor grayson',
     author_email='trevor@dave.com',

@@ -6,7 +6,7 @@ parser = ArgumentParser("paddl", description="Parse DDLs")
 parser.add_argument("sql", type=str,
                     help="sql with CREATE statements")
 parser.add_argument("--erd", action='store_true', default=True,
-                    help="render ER Diagram")
+                    help="render PlantUML ER Diagram")
 
 args = parser.parse_args()
 
