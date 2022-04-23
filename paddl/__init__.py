@@ -2,6 +2,7 @@ import logging
 from enum import Enum
 from .langs.mysql import definition as mysql
 from .models import *
+from .docs import plantuml as erd
 
 
 class Language(Enum):

@@ -1,9 +1,22 @@
+from argparse import ArgumentParser
 from paddl.langs.mysql import definition as mysql
+from paddl import parse, erd
 
+parser = ArgumentParser("paddl", description="Parse DDLs")
+parser.add_argument("sql", type=str,
+                    help="sql with CREATE statements")
+parser.add_argument("--erd", action='store_true', default=True,
+                    help="render ER Diagram")
 
-ddl_s = open('test/fixtures/hello.sql').read()
+args = parser.parse_args()
 
-result = mysql.parseString(ddl_s, parseAll=False)
+ddl_s = open(args.sql).read()
 
-print(ddl_s)
-print(result)
+# result = mysql.parseString(ddl_s, parseAll=False)
+result = parse(ddl_s)
+
+if args.erd:
+    print(erd.render(result))
+else:
+    print(ddl_s)
+    print(result)

@@ -12,7 +12,7 @@ EXTRAS = {
 
 setup(
     name='paddl',
-    version='0.0.2',  # open("VERSION", "r").read(),
+    version='0.1.0',  # open("VERSION", "r").read(),
     packages=setuptools.find_packages(),
     # ['telemetry',],
     package_data={'': ['README.md', 'VERSION']},
