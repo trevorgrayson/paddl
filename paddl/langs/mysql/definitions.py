@@ -1,4 +1,6 @@
-from pyparsing import Word, Optional, alphas, alphanums, nums
+from pyparsing import (
+    Word, Optional, alphas, alphanums, nums, CaselessKeyword
+)
 
 TITLE = Word(alphanums + '_')
 
@@ -24,7 +26,7 @@ TITLE = Word(alphanums + '_')
 # [reference_definition]
 # [check_constraint_definition]
 # }
-DEFAULT = Optional(Word("DEFAULT") + Word(alphanums + '(' + ')'))
+DEFAULT = Optional(CaselessKeyword("DEFAULT") + Word(alphanums + '(' + ')'))
 NULLY = Optional(Optional("NOT") + Optional("NULL"))
 COLUMN_DEFINITION = Word(alphanums+"_") + Optional("(" + Word(nums) + ")") +\
                     NULLY + DEFAULT
@@ -46,10 +48,10 @@ COLUMN_DEFINITION = Word(alphanums+"_") + Optional("(" + Word(nums) + ")") +\
 #       reference_definition
 #   | check_constraint_definition
 # }
-INDEX = Word("INDEX")|Word("KEY") + Word(alphanums+'_')
+INDEX = CaselessKeyword("INDEX")|CaselessKeyword("KEY") + Word(alphanums+'_')
 CREATE_DEFINITION = Word(alphas+'_') + COLUMN_DEFINITION +\
     INDEX
 
 table_options = Optional(Word(alphanums).ignore("=") + Word(alphanums))
 
-partition_options = Optional(Word("PARITION"))
+partition_options = Optional(CaselessKeyword("PARITION"))

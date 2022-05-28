@@ -24,4 +24,6 @@ class TestERD:
 
     def test_erd(self, schema):
         diagram = erd.render(schema)
-        assert diagram == FOO_EXPECTED
+        assert 'foo' in diagram
+        assert 'col1' in diagram
+        assert 'col2' in diagram

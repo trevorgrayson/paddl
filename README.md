@@ -25,6 +25,8 @@ column.type == ColType.INT
 
 ## command line
 
+`paddl` offers "No Code" CLI solutions, such as rendering ER Diagrams.
+
 ```sh
 > python -m paddl
 usage: paddl [-h] [--erd] sql
