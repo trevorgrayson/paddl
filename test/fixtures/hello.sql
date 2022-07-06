@@ -1,3 +1,3 @@
 CREATE TABLE bob (
-    id int , name varchar(255)
+    id int(8) , name varchar(255)
 )

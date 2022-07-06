@@ -25,4 +25,4 @@ def table(t: Table):
 def render(s: Schema):
     return HEADER +\
            "\n".join(map(table, s.tables)) +\
-        FOOTER
+           FOOTER

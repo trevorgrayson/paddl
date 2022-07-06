@@ -1,4 +1,5 @@
 import logging
+from pyparsing.exceptions import ParseException
 from enum import Enum
 from .langs.mysql import definition as mysql
 from .models import *
@@ -26,20 +27,8 @@ def table(result):
     columns = []
     nts = []
     cont = 0
-    for x in range(len(result['columns'])):
-        if cont:
-            cont -= 1
-            continue
-        part = result['columns'][x]
-
-        if part == '(':
-            columns[-1].size = result['columns'][x+1]
-            cont = 2
-        else:
-            nts.append(part)
-        if len(nts) == 2:
-            columns.append(Column(*nts))
-            nts = []
+    for col in result['columns']:
+        columns.append(Column(*col[0:3]))
 
     return Table(name=result['table_name'],
                  columns=columns)
@@ -57,8 +46,12 @@ def parse(ddl, engine=Language.MYSQL, strict=False):
     engine = Language(engine)
     ddl = clean(ddl)
     schema = Schema()
-    results = PARSERS[engine].parseString(ddl, parseAll=strict)
-    logging.debug(results)
+    try:
+        results = PARSERS[engine].parseString(ddl, parseAll=strict)
+        logging.debug(results)
+    except ParseException as ex:
+        raise Exception(ex.args)\
+            # (ex.msg, ex.pstr, ex.parser_element)
 
     schema.tables = [table(result) for result in results]
     return schema

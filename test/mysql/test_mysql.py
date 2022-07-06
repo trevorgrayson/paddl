@@ -4,12 +4,12 @@ from paddl import parse, mysql, ColType
 
 class TestMySQL:
     @fixture
-    def lower(self):
-        return open('test/fixtures/lower.sql').read().replace("\n", ' ')
-
-    @fixture
     def ddl(self):
         return open('test/fixtures/hello.sql').read().replace("\n", ' ')
+
+    @fixture
+    def lower(self):
+        return open('test/fixtures/lower.sql').read().replace("\n", ' ')
 
     @fixture
     def ddls(self):
@@ -39,15 +39,7 @@ class TestMySQL:
         schema = parse(ddls, engine='mysql')
         table = schema.tables[1]
         assert table.name == 'sam'
-        assert len(table.columns) == 4
         assert table.columns[0].name == 'sam_id'
         assert table.columns[0].type == ColType.INT
 
-    # test mysql lib
-    @mark.skip("meh")
-    def test_hello(self, ddl):
-        result = mysql.parseString(ddl)
-        assert result['table_name'] == 'bob'
-        assert list(result) == ['CREATE', 'TABLE', 'bob',
-                                '(', 'id', 'int', 'name', 'varchar', ')']
-
+        assert len(table.columns) == 4

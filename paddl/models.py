@@ -1,5 +1,6 @@
 from enum import Enum
 from avro.schema import PrimitiveSchema
+from pyparsing import ParseResults
 
 
 class ColType(Enum):
@@ -24,7 +25,6 @@ class Table:
     def __init__(self, name=None, columns=None, description='', **kwargs):
         if columns is None:
             columns = []
-
         self.name = name
         self.description = description
         self.columns = [Column(**col)
@@ -38,5 +38,8 @@ class Column:
         self.name = name
         self.description = description
         if isinstance(type, PrimitiveSchema):
-            type = type.type
-        self.type = ColType(type)
+            self.type = type.type
+        elif isinstance(type, ParseResults):
+            self.name = type.col_name
+            self.type = type.data_type[0]
+        self.type = ColType(type.lower())
