@@ -2,9 +2,9 @@ from paddl.langs.mysql import create_definition
 
 VALID = """
 (
-name VARCHAR(255),
-email CHAR(256),
-CONSTRAINT symbol1 FOREIGN KEY bob (user_id) REFERENCES user (id)
+    name VARCHAR(255),
+    email CHAR(256),
+    CONSTRAINT symbol1 FOREIGN KEY bob (user_id) REFERENCES user (id)
 )
 """
 
