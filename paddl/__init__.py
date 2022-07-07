@@ -6,6 +6,9 @@ from .models import *
 from .docs import plantuml as erd
 
 
+class PaddlException(Exception):
+    pass
+
 class Language(Enum):
     MYSQL = 'mysql'
 
@@ -50,7 +53,7 @@ def parse(ddl, engine=Language.MYSQL, strict=False):
         results = PARSERS[engine].parseString(ddl, parseAll=strict)
         logging.debug(results)
     except ParseException as ex:
-        raise Exception(ex.args)\
+        raise PaddlException(ex.args)\
             # (ex.msg, ex.pstr, ex.parser_element)
 
     schema.tables = [table(result) for result in results]

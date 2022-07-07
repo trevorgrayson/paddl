@@ -19,6 +19,7 @@ MATCH_SIMPLE = CaselessKeyword("MATCH SIMPLE")
 
 ## Data Types
 size = "(" + Word(nums)("size") + ")"
+fsp = size
 
 CHAR = CaselessKeyword("CHAR")("data_type")+(size) 	     # A FIXED length string (can contain letters, numbers, and special characters). The size parameter specifies the column length in characters - can be from 0 to 255. Default is 1
 VARCHAR = CaselessKeyword("VARCHAR")("data_type")+(size)  # A VARIABLE length string (can contain letters, numbers, and special characters). The size parameter specifies the maximum column length in characters - can be from 0 to 65535
@@ -52,9 +53,11 @@ BIGINT = CaselessKeyword("BIGINT")("data_type")+Optional(size) #	A large integer
 # DEC(size, d)	Equal to DECIMAL(size,d)
 
 TITLE = Word(alphanums_)
-DEFAULT = Optional(CaselessKeyword("DEFAULT") + Word(alphanums + '(' + ')'))("default")
-NULLY = Optional(Optional("NOT") + "NULL")
-INDEX = CaselessKeyword("INDEX")|CaselessKeyword("KEY") + Word(alphanums_)
+# TODO Quotes
+DEFAULT = Optional(CaselessKeyword("DEFAULT") +
+                   Word(alphanums + '(' + ')' + "'" + "\"")("default"))
+NULLY = Optional(Optional("NOT")("not_null") + "NULL")
+INDEX = CaselessKeyword("INDEX") | CaselessKeyword("KEY") + Word(alphanums_)
 
 tbl_name = Word(alphanums+"_")("tbl_name")
 key_part___ = OneOrMore(Word(alphanums_))('key_part').ignore(",")
@@ -68,16 +71,36 @@ index_name = Optional(Word(alphanums_))("index_name")
 
 string = Word(alphanums_)("string")
 
-# DATE	A date. Format: YYYY-MM-DD. The supported range is from '1000-01-01' to '9999-12-31'
-# DATETIME(fsp)	A date and time combination. Format: YYYY-MM-DD hh:mm:ss. The supported range is from '1000-01-01 00:00:00' to '9999-12-31 23:59:59'. Adding DEFAULT and ON UPDATE in the column definition to get automatic initialization and updating to the current date and time
-# TIMESTAMP(fsp)	A timestamp. TIMESTAMP values are stored as the number of seconds since the Unix epoch ('1970-01-01 00:00:00' UTC). Format: YYYY-MM-DD hh:mm:ss. The supported range is from '1970-01-01 00:00:01' UTC to '2038-01-09 03:14:07' UTC. Automatic initialization and updating to the current date and time can be specified using DEFAULT CURRENT_TIMESTAMP and ON UPDATE CURRENT_TIMESTAMP in the column definition
-# TIME(fsp)	A time. Format: hh:mm:ss. The supported range is from '-838:59:59' to '838:59:59'
+# DATE	A date. Format: YYYY-MM-DD. The supported range is
+# from '1000-01-01' to '9999-12-31'
+# TODO DEFAULT UPDATE
+DATETIME = CaselessKeyword("DATETIME")("data_type") + (fsp)
+# A date and time combination. Format: YYYY-MM-DD hh:mm:ss. The supported range
+# is from '1000-01-01 00:00:00' to '9999-12-31 23:59:59'.
+# Adding DEFAULT and ON UPDATE in the column definition to get automatic
+# initialization and updating to the current date and time
+TIMESTAMP = CaselessKeyword("TIMESTAMP")("date_type") + (fsp)
+# A timestamp. TIMESTAMP values are stored as the number of seconds since the
+# Unix epoch ('1970-01-01 00:00:00' UTC). Format: YYYY-MM-DD hh:mm:ss.
+# The supported range is from '1970-01-01 00:00:01' UTC to
+# '2038-01-09 03:14:07' UTC. Automatic initialization and updating to the
+# current date and time can be specified using DEFAULT CURRENT_TIMESTAMP and
+# ON UPDATE CURRENT_TIMESTAMP in the column definition
+TIME = CaselessKeyword("TIME")("date_type") + (fsp)
+# A time. Format: hh:mm:ss. The supported range is
+# from '-838:59:59' to '838:59:59'
 # YEAR	A year in four-digit format. Values allowed in four-digit format: 1901 to 2155, and 0000.
 # MySQL 8.0 does not support year in two-digit format.
+
 data_type = MatchFirst((
     CHAR, VARCHAR, BINARY,
-    INT, INTEGER
+    INT, INTEGER, BIGINT,
+    DATETIME, TIMESTAMP, TIME
 ))
+
+ON_UPDATE = Optional(
+    CaselessKeyword("ON UPDATE") + data_type("default_data_type")
+)
 
 
 # extract to util

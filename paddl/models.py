@@ -6,7 +6,14 @@ from pyparsing import ParseResults
 class ColType(Enum):
     STRING = "string"
     VARCHAR = "varchar"
+    CHAR = "char"
     INT = 'int'
+    DATETIME = 'datetime'
+    DATE = 'date'
+    TIMESTAMP = 'timestamp'
+    TIME = 'time'
+    BIGINT = 'bigint'
+    CURRENT_TIMESTAMP = 'current_timestamp'
 
 
 class Schema:

@@ -19,7 +19,7 @@ reference_definition = (
 # column_definition: {
 column_definition = MatchFirst((
     # data_type [NOT NULL | NULL] [DEFAULT {literal | (expr)} ]
-    data_type + NULLY + DEFAULT,
+    data_type + (NULLY | DEFAULT),
     # [VISIBLE | INVISIBLE]
     # [AUTO_INCREMENT] [UNIQUE [KEY]] [[PRIMARY] KEY]
     # [COMMENT 'string']
@@ -73,7 +73,7 @@ CONSTRAINT_FOREIGN_KEY = (
 # }
 
 column_definition = MatchFirst((
-    col_name + data_type + NULLY + DEFAULT,
+    col_name + data_type + (NULLY & DEFAULT & ON_UPDATE),
     CONSTRAINT_FOREIGN_KEY,  # FK first for specificity
 ))
 
