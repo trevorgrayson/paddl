@@ -6,9 +6,9 @@ NOT_CREATE_STATEMENT = Word(alphas)
 
 
 CREATE = CREATE + TEMPORARY + TABLE + IF_NOT_EXISTS + table_name +\
-         create_definition + \
+         create_definition +\
+         table_options +\
+         partition_options +\
          Optional(';')
-         # table_options + \
-         # partition_options + \
 
 definition = OneOrMore(Group(CREATE))
