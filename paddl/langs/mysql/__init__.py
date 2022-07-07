@@ -1,14 +1,17 @@
 from .definitions import *
 from .keywords import *
 from .keywords import _
+from pyparsing import Suppress
 
 NOT_CREATE_STATEMENT = Word(alphas)
 
 
-CREATE = CREATE + TEMPORARY + TABLE + IF_NOT_EXISTS + table_name +\
-         create_definition +\
-         table_options +\
-         partition_options +\
-         Optional(';')
+CREATE_STMT = (
+    CREATE + TEMPORARY + TABLE + IF_NOT_EXISTS + table_name +
+    create_definition +
+    table_options +
+    partition_options +
+    Optional(Suppress(";"))
+)
 
-definition = OneOrMore(Group(CREATE))
+definition = OneOrMore(Group(CREATE_STMT))

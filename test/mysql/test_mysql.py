@@ -43,3 +43,4 @@ class TestMySQL:
         assert table.columns[0].type == ColType.INT
 
         assert len(table.columns) == 4
+        assert len(schema.tables) == 2

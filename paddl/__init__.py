@@ -9,6 +9,7 @@ from .docs import plantuml as erd
 class PaddlException(Exception):
     pass
 
+
 class Language(Enum):
     MYSQL = 'mysql'
 

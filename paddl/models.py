@@ -6,8 +6,10 @@ from pyparsing import ParseResults
 class ColType(Enum):
     STRING = "string"
     VARCHAR = "varchar"
+    TEXT = 'text'
     CHAR = "char"
     INT = 'int'
+    DECIMAL = 'decimal'
     DATETIME = 'datetime'
     DATE = 'date'
     NULL = 'null'
@@ -36,6 +38,7 @@ class Table:
             columns = []
         self.name = name
         self.description = description
+        self.table_options = kwargs.get('table_options')
         self.columns = [Column(**col)
                         if isinstance(col, dict) else col
                         for col in columns]

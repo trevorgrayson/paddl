@@ -85,6 +85,10 @@ create_definition = '(' + \
                     ')'
 # ZeroOrMore(CONSTRAINT_FOREIGN_KEY)("fks") + \
 
-table_options = Optional(CaselessKeyword("IOU-FEATURE"))  # Optional(Word(alphanums).ignore("=") + Word(alphanums))
+table_option = (
+                    Word(alphanums_) + "=" +
+                    Word(alphanums_+"'"+"\"") + Optional(",")
+               ) | Word(alphanums_)
+table_options = ZeroOrMore(Group(table_option)("table_options"))  # Optional(Word(alphanums).ignore("=") + Word(alphanums))
 
 partition_options = Optional(CaselessKeyword("PARITION"))

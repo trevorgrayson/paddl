@@ -19,6 +19,7 @@ MATCH_SIMPLE = CaselessKeyword("MATCH SIMPLE")
 
 ## Data Types
 size = "(" + Word(nums)("size") + ")"
+size_opt = Optional(size)
 fsp = size
 
 CHAR = CaselessKeyword("CHAR")("data_type")+(size) 	     # A FIXED length string (can contain letters, numbers, and special characters). The size parameter specifies the column length in characters - can be from 0 to 255. Default is 1
@@ -27,7 +28,7 @@ BINARY = CaselessKeyword("BINARY")("data_type")+(size)	 # Equal to CHAR(), but s
 # VARBINARY(size)	# Equal to VARCHAR(), but stores binary byte strings. The size parameter specifies the maximum column length in bytes.
 # TINYBLOB	    # For BLOBs (Binary Large OBjects). Max length: 255 bytes
 # TINYTEXT	    # Holds a string with a maximum length of 255 characters
-# TEXT(size)	    # Holds a string with a maximum length of 65,535 bytes
+TEXT = CaselessKeyword("TEXT") + (size_opt)  # Holds a string with a maximum length of 65,535 bytes
 # BLOB(size)	    # For BLOBs (Binary Large OBjects). Holds up to 65,535 bytes of data
 # MEDIUMTEXT	    # Holds a string with a maximum length of 16,777,215 characters
 # MEDIUMBLOB	    # For BLOBs (Binary Large OBjects). Holds up to 16,777,215 bytes of data
@@ -49,6 +50,7 @@ BIGINT = CaselessKeyword("BIGINT")("data_type")+Optional(size) #	A large integer
 # FLOAT(p)	A floating point number. MySQL uses the p value to determine whether to use FLOAT or DOUBLE for the resulting data type. If p is from 0 to 24, the data type becomes FLOAT(). If p is from 25 to 53, the data type becomes DOUBLE()
 # DOUBLE(size, d)	A normal-size floating point number. The total number of digits is specified in size. The number of digits after the decimal point is specified in the d parameter
 # DOUBLE PRECISION(size, d)
+DECIMAL = CaselessKeyword("DECIMAL") + "(" + Word(nums).ignore(",") + Word(nums) + ")" #TODO optionals
 # DECIMAL(size, d)	An exact fixed-point number. The total number of digits is specified in size. The number of digits after the decimal point is specified in the d parameter. The maximum number for size is 65. The maximum number for d is 30. The default value for size is 10. The default value for d is 0.
 # DEC(size, d)	Equal to DECIMAL(size,d)
 
@@ -98,9 +100,9 @@ ENUM = CaselessKeyword("ENUM") + "(" + OneOrMore(
 
 data_type = MatchFirst((
     CHAR, VARCHAR, BINARY,
-    INT, INTEGER, BIGINT,
+    INT, INTEGER, BIGINT, DECIMAL,
     DATETIME, TIMESTAMP, TIME,
-    ENUM
+    ENUM, TEXT
 ))
 
 VALUES = MatchFirst((
