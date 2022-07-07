@@ -53,27 +53,28 @@ BIGINT = CaselessKeyword("BIGINT")("data_type")+Optional(size) #	A large integer
 # DEC(size, d)	Equal to DECIMAL(size,d)
 
 TITLE = Word(alphanums_)
-# TODO Quotes
-DEFAULT = Optional(CaselessKeyword("DEFAULT") +
-                   Word(alphanums + '(' + ')' + "'" + "\"")("default"))
+VALUE = Word(alphanums_ + '(' + ')' + "'" + "\"")
+DEFAULT = Optional(CaselessKeyword("DEFAULT") + VALUE("default"))
 NULLY = Optional(Optional("NOT")("not_null") + "NULL")
 INDEX = CaselessKeyword("INDEX") | CaselessKeyword("KEY") + Word(alphanums_)
 
-tbl_name = Word(alphanums+"_")("tbl_name")
+tbl_name = Optional("`") + Word(alphanums+"_")("tbl_name") + Optional("`")
 key_part___ = OneOrMore(Word(alphanums_))('key_part').ignore(",")
 
 # Key Variables
-table_name = Word(alphanums)("table_name")
-col_name = Word(alphanums_)("col_name")
+table_name = Optional("`") + Word(alphanums)("table_name") + Optional("`")
+col_name = Optional("`") + Word(alphanums_)("col_name") + Optional("`")
 
 symbol = Optional(Word(alphanums_))('symbol')
 index_name = Optional(Word(alphanums_))("index_name")
 
 string = Word(alphanums_)("string")
 
+NULL = CaselessKeyword("NULL")
 # DATE	A date. Format: YYYY-MM-DD. The supported range is
 # from '1000-01-01' to '9999-12-31'
 # TODO DEFAULT UPDATE
+CURRENT_TIMESTAMP = CaselessKeyword("CURRENT_TIMESTAMP")("data_type") + (fsp)
 DATETIME = CaselessKeyword("DATETIME")("data_type") + (fsp)
 # A date and time combination. Format: YYYY-MM-DD hh:mm:ss. The supported range
 # is from '1000-01-01 00:00:00' to '9999-12-31 23:59:59'.
@@ -87,6 +88,9 @@ TIMESTAMP = CaselessKeyword("TIMESTAMP")("date_type") + (fsp)
 # current date and time can be specified using DEFAULT CURRENT_TIMESTAMP and
 # ON UPDATE CURRENT_TIMESTAMP in the column definition
 TIME = CaselessKeyword("TIME")("date_type") + (fsp)
+ENUM = CaselessKeyword("ENUM") + "(" + OneOrMore(
+    Word(alphanums_+"'"+"\"").ignore(',')
+) + ")"
 # A time. Format: hh:mm:ss. The supported range is
 # from '-838:59:59' to '838:59:59'
 # YEAR	A year in four-digit format. Values allowed in four-digit format: 1901 to 2155, and 0000.
@@ -95,11 +99,16 @@ TIME = CaselessKeyword("TIME")("date_type") + (fsp)
 data_type = MatchFirst((
     CHAR, VARCHAR, BINARY,
     INT, INTEGER, BIGINT,
-    DATETIME, TIMESTAMP, TIME
+    DATETIME, TIMESTAMP, TIME,
+    ENUM
+))
+
+VALUES = MatchFirst((
+    NULL, CURRENT_TIMESTAMP, Word(alphanums_)
 ))
 
 ON_UPDATE = Optional(
-    CaselessKeyword("ON UPDATE") + data_type("default_data_type")
+    CaselessKeyword("ON UPDATE") + VALUE
 )
 
 

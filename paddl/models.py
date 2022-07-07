@@ -10,10 +10,12 @@ class ColType(Enum):
     INT = 'int'
     DATETIME = 'datetime'
     DATE = 'date'
+    NULL = 'null'
     TIMESTAMP = 'timestamp'
     TIME = 'time'
     BIGINT = 'bigint'
     CURRENT_TIMESTAMP = 'current_timestamp'
+    ENUM = 'enum'
 
 
 class Schema:
