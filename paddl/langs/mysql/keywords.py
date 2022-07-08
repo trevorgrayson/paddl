@@ -1,5 +1,5 @@
 # https://pyparsing-docs.readthedocs.io/en/latest/HowToUsePyparsing.html#hello-world
-from pyparsing import Keyword, OneOrMore, Optional, Group, CaselessKeyword, alphanums, nums, MatchFirst, Word
+from pyparsing import Keyword, OneOrMore, Optional, Group, CaselessKeyword, alphanums, nums, MatchFirst, Word, Suppress
 
 alphanums_ = alphanums+"_"
 
@@ -54,6 +54,8 @@ DECIMAL = CaselessKeyword("DECIMAL") + "(" + Word(nums).ignore(",") + Word(nums)
 # DECIMAL(size, d)	An exact fixed-point number. The total number of digits is specified in size. The number of digits after the decimal point is specified in the d parameter. The maximum number for size is 65. The maximum number for d is 30. The default value for size is 10. The default value for d is 0.
 # DEC(size, d)	Equal to DECIMAL(size,d)
 
+TICK = Optional(Suppress("`"))
+
 TITLE = Word(alphanums_)
 VALUE = Word(alphanums_ + '(' + ')' + "'" + "\"")
 DEFAULT = Optional(CaselessKeyword("DEFAULT") + VALUE("default"))
@@ -61,11 +63,11 @@ NULLY = Optional(Optional("NOT")("not_null") + "NULL")
 INDEX = CaselessKeyword("INDEX") | CaselessKeyword("KEY") + Word(alphanums_)
 
 tbl_name = Optional("`") + Word(alphanums+"_")("tbl_name") + Optional("`")
-key_part___ = OneOrMore(Word(alphanums_))('key_part').ignore(",")
+key_part___ = OneOrMore(TICK + Word(alphanums_) + TICK)('key_part').ignore(",")
 
 # Key Variables
-table_name = Optional("`") + Word(alphanums)("table_name") + Optional("`")
-col_name = Optional("`") + Word(alphanums_)("col_name") + Optional("`")
+table_name = TICK + Word(alphanums)("table_name") + TICK
+col_name = TICK + Word(alphanums_)("col_name") + TICK
 
 symbol = Optional(Word(alphanums_))('symbol')
 index_name = Optional(Word(alphanums_))("index_name")

@@ -42,6 +42,21 @@ class Table:
         self.columns = [Column(**col)
                         if isinstance(col, dict) else col
                         for col in columns]
+        self.constraints = [Constraint(**col)
+                            if isinstance(col, dict) else col
+                            for col in kwargs.get("constraints", [])]
+
+
+class Constraint:
+    def __init__(self, symbol=None, reference=None,
+                 ref_table=None, ref_columns=None, *args):
+        if ref_columns == None:
+            ref_columns = []
+
+        self.symbol = symbol
+        self.reference = reference
+        self.ref_table= ref_table
+        self.ref_columns = ref_columns
 
 
 class Column:

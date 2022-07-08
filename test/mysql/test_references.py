@@ -1,6 +1,6 @@
 from pytest import fixture, mark
 from paddl import parse, mysql, ColType
-from paddl.langs.mysql.definitions import reference_definition, CONSTRAINT_FOREIGN_KEY
+from paddl.langs.mysql.definitions import reference_definition, CONSTRAINT_FOREIGN_KEY, column_definition
 
 
 class TestMySQL:
@@ -17,6 +17,9 @@ class TestMySQL:
     def constraint(self):
         return "CONSTRAINT fk_stuff FOREIGN KEY (loan_no) " +\
             "REFERENCES LOAN_DETAILS(loan_no)"
+    @fixture
+    def mysql_dump(self):
+        return "CONSTRAINT `adjustment_adjustment_source_id_foreign` FOREIGN KEY (`adjustment_source_id`) REFERENCES `adjustment_source` (`id`)"
 
     # def test_parse(self, ddl):
     #     schema = parse(ddl, engine='mysql')
@@ -39,3 +42,11 @@ class TestMySQL:
         assert result.tbl_name == 'LOAN_DETAILS'
         assert result.key_part[0] == 'loan_no'
         assert len(result.key_part) == 1
+
+    def test_mysql_dump(self, mysql_dump):
+        result = CONSTRAINT_FOREIGN_KEY.parseString(mysql_dump)
+        assert result.symbol == 'adjustment_adjustment_source_id_foreign'
+
+    def test_mysql_dump_ref_def(self, mysql_dump):
+        result = column_definition.parseString(mysql_dump)
+        assert result.symbol == 'adjustment_adjustment_source_id_foreign'

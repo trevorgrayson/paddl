@@ -23,19 +23,33 @@ def clean(ddl):
     return ddl.replace('`', '')
 
 
+def is_constraint(col):
+    return 'FOREIGN KEY' in col.asList()
+
+
+def cast_col_def(col):
+    if is_constraint(col):
+        return Constraint(*col)
+    return Column(*col[0:3])
+
+
 def table(result):
     """
     :param result: pyparse parseString result
     :return: paddl.Schema
     """
     columns = []
-    nts = []
-    cont = 0
+    constraints = []
     for col in result['columns']:
-        columns.append(Column(*col[0:3]))
+        column = cast_col_def(col)
+        if isinstance(column, Column):
+            columns.append(column)
+        else:
+            constraints.append(column)
 
     return Table(name=result['table_name'],
-                 columns=columns)
+                 columns=columns,
+                 constraints=constraints)
 
 
 def parse(ddl, engine=Language.MYSQL, strict=False):

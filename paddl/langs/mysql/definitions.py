@@ -1,7 +1,7 @@
 from pyparsing import (
     Word, Optional, alphas, alphanums, nums,
     MatchFirst, OneOrMore, ZeroOrMore, Group,
-    CaselessKeyword, oneOf
+    CaselessKeyword, oneOf, Suppress
 )
 from .keywords import *
 
@@ -11,7 +11,7 @@ def COMMENT(string):
 
 
 reference_definition = (
-    REFERENCES + tbl_name + "(" + key_part___ + ")"
+    REFERENCES + TICK + tbl_name + TICK + "(" + key_part___ + ")"
     # Optional(MatchFirst([MATCH_FULL, MATCH_PARTIAL, MATCH_SIMPLE]))
     # ON_DELETE reference_option
     # ON_UPDATE reference_option
@@ -63,26 +63,28 @@ column_definition = MatchFirst((
 #   | [CONSTRAINT [symbol]] FOREIGN KEY
 #       [index_name] (col_name,...)
 #       reference_definition
+
 CONSTRAINT_FOREIGN_KEY = (
-    Optional(CaselessKeyword("CONSTRAINT") + Word(alphanums_)("symbol")) +
+    Optional(CaselessKeyword("CONSTRAINT") +
+    TICK + Word(alphanums_)("symbol")) + TICK +
     CaselessKeyword("FOREIGN KEY") + Optional(Word(alphanums_))("index_name") +
-    "(" + OneOrMore(Word(alphanums_))("col_names") + ")" +
+    "(" + OneOrMore(TICK + Word(alphanums_) + TICK) + ")" +
     reference_definition
 )
 #   | check_constraint_definition
 # }
 
 column_definition = MatchFirst((
-    col_name + data_type + (NULLY & DEFAULT & ON_UPDATE),
     CONSTRAINT_FOREIGN_KEY,  # FK first for specificity
+    col_name + data_type + (NULLY & DEFAULT & ON_UPDATE),
 ))
 
 # should be able to mix up order of rows
-create_definition = '(' + \
+create_definition = Suppress('(') + \
                     OneOrMore(Group(
                         column_definition.ignore(',')
                     ))("columns") + \
-                    ')'
+                    Suppress(')')
 # ZeroOrMore(CONSTRAINT_FOREIGN_KEY)("fks") + \
 
 table_option = (
