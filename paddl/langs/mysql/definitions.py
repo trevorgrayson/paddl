@@ -63,15 +63,44 @@ column_definition = MatchFirst((
 #       [index_name] (col_name,...)
 #       reference_definition
 
+CONSTRAINT_symbol = Optional(CaselessKeyword("CONSTRAINT") +
+         TICK + Word(alphanums_)("symbol")) + TICK
+
+index_type = Word(alphanums_)
+
+kbs_value = Word(nums)
+parser_name = Word(alphanums_)
+KEY_BLOCK_SIZE = CaselessKeyword("KEY_BLOCK_SIZE")
+WITH_PARSER = CaselessKeyword("WITH PARSER")
+VISIBLE = CaselessKeyword("VISIBLE")
+INVISIBLE = CaselessKeyword("INVISIBLE")
+ENGINE_ATTRIBUTE = CaselessKeyword("ENGINE_ATTRIBUTE")
+SECONDARY_ENGINE_ATTRIBUTE = CaselessKeyword("SECONDARY_ENGINE_ATTRIBUTE")
+
+_string = Word(alphanums_)("_string")
+index_option = (
+                KEY_BLOCK_SIZE + Optional(Suppress('=')) + kbs_value
+                | index_type
+                | WITH_PARSER + parser_name
+                # | (COMMENT + Suppress("'") + _string + Suppress("'"))
+                | VISIBLE | INVISIBLE
+                # | ENGINE_ATTRIBUTE + Optional(Suppress('=')) + Suppress("'") + string + Suppress("'")
+                # | SECONDARY_ENGINE_ATTRIBUTE + Optional(Suppress('=')) + Suppress("'") + string + Suppress("'")
+                )
+CONSTRAINT_PRIMARY_KEY = (
+   Optional(index_type) + "(" + key_part___ + ")" +
+   index_option
+)
+
 CONSTRAINT_FOREIGN_KEY = (
-    Optional(CaselessKeyword("CONSTRAINT") +
-             TICK + Word(alphanums_)("symbol")) + TICK +
+    CONSTRAINT_symbol +
     CaselessKeyword("FOREIGN KEY") + Optional(Word(alphanums_))("index_name") +
     Suppress("(") + OneOrMore(Group(TICK + Word(alphanums_) + TICK)) + Suppress(")") +
     reference_definition
 )
 #   | check_constraint_definition
 # }
+
 
 column_definition = MatchFirst((
     CONSTRAINT_FOREIGN_KEY,  # FK first for specificity

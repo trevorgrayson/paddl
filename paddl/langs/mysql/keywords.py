@@ -72,7 +72,7 @@ col_name = TICK + Word(alphanums_)("col_name") + TICK
 symbol = Optional(Word(alphanums_))('symbol')
 index_name = Optional(Word(alphanums_))("index_name")
 
-string = Word(alphanums_)("string")
+string = Word(alphanums_)
 
 NULL = CaselessKeyword("NULL")
 # DATE	A date. Format: YYYY-MM-DD. The supported range is
