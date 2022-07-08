@@ -1,7 +1,6 @@
 from .definitions import *
 from .keywords import *
 from .keywords import _
-from pyparsing import Suppress
 
 NOT_CREATE_STATEMENT = Word(alphas)
 

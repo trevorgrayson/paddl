@@ -63,7 +63,7 @@ NULLY = Optional(Optional("NOT")("not_null") + "NULL")
 INDEX = CaselessKeyword("INDEX") | CaselessKeyword("KEY") + Word(alphanums_)
 
 tbl_name = Optional("`") + Word(alphanums+"_")("tbl_name") + Optional("`")
-key_part___ = OneOrMore(TICK + Word(alphanums_) + TICK)('key_part').ignore(",")
+key_part___ = Group(OneOrMore(TICK + Word(alphanums_) + TICK))('key_part').ignore(",")
 
 # Key Variables
 table_name = TICK + Word(alphanums)("table_name") + TICK

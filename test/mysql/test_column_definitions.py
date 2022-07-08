@@ -22,5 +22,4 @@ class TestColumnDefinitions:
     def test_col_defs(self, create_def):
         result = create_definition.parseString(create_def)
         assert result[0][0] == 'id'
-
-        assert result[6][0] == 'id'
+        assert result[6][0] == 'CONSTRAINT'

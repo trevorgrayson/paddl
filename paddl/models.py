@@ -48,15 +48,20 @@ class Table:
 
 
 class Constraint:
-    def __init__(self, symbol=None, reference=None,
-                 ref_table=None, ref_columns=None, *args):
-        if ref_columns == None:
-            ref_columns = []
+    def __init__(self, *args):
+        self.symbol = None
+        self.reference = None
+        self.ref_table = None
+        self.ref_columns = []
 
-        self.symbol = symbol
-        self.reference = reference
-        self.ref_table= ref_table
-        self.ref_columns = ref_columns
+        if args[0] == 'CONSTRAINT':
+            self.symbol = args[1]
+            args = args[2:]
+        args = args[1:]  # shift 'FOREIGN KEY' off
+        self.key = args[0].asList()
+        args = args[2:]  # shift 'REFERENCES' off
+        self.ref_table = args[0]
+        self.ref_columns = args[1]
 
 
 class Column:

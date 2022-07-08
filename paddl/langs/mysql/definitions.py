@@ -1,7 +1,5 @@
 from pyparsing import (
-    Word, Optional, alphas, alphanums, nums,
-    MatchFirst, OneOrMore, ZeroOrMore, Group,
-    CaselessKeyword, oneOf, Suppress
+    ZeroOrMore, alphas, Suppress
 )
 from .keywords import *
 
@@ -11,7 +9,8 @@ def COMMENT(string):
 
 
 reference_definition = (
-    REFERENCES + TICK + tbl_name + TICK + "(" + key_part___ + ")"
+    REFERENCES + TICK + tbl_name + TICK +
+    Suppress("(") + key_part___ + Suppress(")")
     # Optional(MatchFirst([MATCH_FULL, MATCH_PARTIAL, MATCH_SIMPLE]))
     # ON_DELETE reference_option
     # ON_UPDATE reference_option
@@ -66,9 +65,9 @@ column_definition = MatchFirst((
 
 CONSTRAINT_FOREIGN_KEY = (
     Optional(CaselessKeyword("CONSTRAINT") +
-    TICK + Word(alphanums_)("symbol")) + TICK +
+             TICK + Word(alphanums_)("symbol")) + TICK +
     CaselessKeyword("FOREIGN KEY") + Optional(Word(alphanums_))("index_name") +
-    "(" + OneOrMore(TICK + Word(alphanums_) + TICK) + ")" +
+    Suppress("(") + OneOrMore(Group(TICK + Word(alphanums_) + TICK)) + Suppress(")") +
     reference_definition
 )
 #   | check_constraint_definition
