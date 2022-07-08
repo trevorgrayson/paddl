@@ -53,10 +53,14 @@ class Constraint:
         self.reference = None
         self.ref_table = None
         self.ref_columns = []
-
         if args[0] == 'CONSTRAINT':
             self.symbol = args[1]
             args = args[2:]
+        key_type = args[0]
+
+        if key_type == "PRIMARY KEY":
+            self.reference = args[1]
+            return
         args = args[1:]  # shift 'FOREIGN KEY' off
         self.key = args[0].asList()
         args = args[2:]  # shift 'REFERENCES' off

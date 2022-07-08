@@ -24,7 +24,8 @@ def clean(ddl):
 
 
 def is_constraint(col):
-    return 'FOREIGN KEY' in col.asList()
+    col = col.asList()
+    return 'FOREIGN KEY' in col or 'PRIMARY KEY' in col
 
 
 def cast_col_def(col):

@@ -70,7 +70,7 @@ table_name = TICK + Word(alphanums)("table_name") + TICK
 col_name = TICK + Word(alphanums_)("col_name") + TICK
 
 symbol = Optional(Word(alphanums_))('symbol')
-index_name = Optional(Word(alphanums_))("index_name")
+index_name = TICK + Optional(Word(alphanums_))("index_name") + TICK
 
 string = Word(alphanums_)
 
@@ -114,6 +114,23 @@ VALUES = MatchFirst((
 ON_UPDATE = Optional(
     CaselessKeyword("ON UPDATE") + VALUE
 )
+
+# index_options
+KEY = CaselessKeyword("KEY")
+PRIMARY_KEY = CaselessKeyword("PRIMARY KEY")
+KEY_BLOCK_SIZE = CaselessKeyword("KEY_BLOCK_SIZE")
+WITH_PARSER = CaselessKeyword("WITH PARSER")
+VISIBLE = CaselessKeyword("VISIBLE")
+INVISIBLE = CaselessKeyword("INVISIBLE")
+ENGINE_ATTRIBUTE = CaselessKeyword("ENGINE_ATTRIBUTE")
+SECONDARY_ENGINE_ATTRIBUTE = CaselessKeyword("SECONDARY_ENGINE_ATTRIBUTE")
+
+index_type = Word(alphanums_)
+
+kbs_value = Word(nums)
+parser_name = Word(alphanums_)
+
+_string = Word(alphanums_)("_string")
 
 
 # extract to util
