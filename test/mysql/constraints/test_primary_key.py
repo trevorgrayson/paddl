@@ -23,9 +23,12 @@ class TestPrimaryKey:
     def test_primary_key(self, pkey):
         result = CONSTRAINT_PRIMARY_KEY.parseString(pkey)
         assert result[0] == "PRIMARY KEY"
-        assert result[2].asList() == ['id']
+        assert result[1][0] == 'id'
 
     def test_ddl(self, ddl):
-        result = parse(ddl, engine='mysql')
-        assert result
+        schema = parse(ddl, engine='mysql')
+        table = schema.tables[0]
+        assert len(table.columns) == 6
+        assert len(table.constraints) == 1
+        assert table.constraints[0].reference[0] == 'id'
 

@@ -51,8 +51,8 @@ CONSTRAINT_symbol = Optional(CaselessKeyword("CONSTRAINT") +
 
 index_option = ZeroOrMore(
         KEY_BLOCK_SIZE + Optional(Suppress('=')) + kbs_value
-        | index_type
-        | WITH_PARSER + parser_name
+        # | Optional(index_type)
+        # | WITH_PARSER + parser_name
         # | (COMMENT + Suppress("'") + _string + Suppress("'"))
         | VISIBLE | INVISIBLE
     # | ENGINE_ATTRIBUTE + Optional(Suppress('=')) + Suppress("'") + string + Suppress("'")
@@ -64,7 +64,7 @@ index_option = ZeroOrMore(
 #   | {INDEX | KEY} [index_name] [index_type] (key_part,...)
 #       [index_option] ...
 CONSTRAINT_KEY = ((INDEX | KEY) + Optional(index_name) +
-                  Optional(index_type) + "(" + key_part___ + ")" +
+                  Optional(index_type) + Suppress("(") + key_part___ + Suppress(")") +
                   index_option
                   )
 #   | {FULLTEXT | SPATIAL} [INDEX | KEY] [index_name] (key_part,...)
@@ -74,7 +74,7 @@ CONSTRAINT_KEY = ((INDEX | KEY) + Optional(index_name) +
 #       [index_option] ...
 CONSTRAINT_PRIMARY_KEY = (
         CONSTRAINT_symbol + PRIMARY_KEY +
-        Optional(index_type) + "(" + key_part___ + ")" +
+        Optional(index_type) + Suppress("(") + key_part___ + Suppress(")") +
         index_option
 )
 #   | [CONSTRAINT [symbol]] UNIQUE [INDEX | KEY]
@@ -94,8 +94,8 @@ CONSTRAINT_FOREIGN_KEY = (
 
 
 column_definition = MatchFirst((
-    CONSTRAINT_PRIMARY_KEY,
     CONSTRAINT_FOREIGN_KEY,
+    CONSTRAINT_PRIMARY_KEY,
     CONSTRAINT_KEY,
     col_name + data_type + (NULLY & DEFAULT & ON_UPDATE),
 ))

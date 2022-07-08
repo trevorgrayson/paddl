@@ -125,7 +125,8 @@ INVISIBLE = CaselessKeyword("INVISIBLE")
 ENGINE_ATTRIBUTE = CaselessKeyword("ENGINE_ATTRIBUTE")
 SECONDARY_ENGINE_ATTRIBUTE = CaselessKeyword("SECONDARY_ENGINE_ATTRIBUTE")
 
-index_type = Word(alphanums_)
+index_type = CaselessKeyword("USING") + \
+             (CaselessKeyword("BTREE") | CaselessKeyword("HASH"))
 
 kbs_value = Word(nums)
 parser_name = Word(alphanums_)

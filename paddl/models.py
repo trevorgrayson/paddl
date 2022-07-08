@@ -50,22 +50,33 @@ class Table:
 class Constraint:
     def __init__(self, *args):
         self.symbol = None
+        self.index_name = None
+        self.key = None
         self.reference = None
         self.ref_table = None
         self.ref_columns = []
-        if args[0] == 'CONSTRAINT':
+        if args[0] == 'CONSTRAINT':  # parse `symbol` if present
             self.symbol = args[1]
             args = args[2:]
         key_type = args[0]
 
-        if key_type == "PRIMARY KEY":
-            self.reference = args[1]
+        if key_type in ("PRIMARY KEY", "KEY"):
+            self.reference=args[-1].asList()
+            if len(args) >= 3:
+                self.index_name = args[1]
             return
+
         args = args[1:]  # shift 'FOREIGN KEY' off
         self.key = args[0].asList()
         args = args[2:]  # shift 'REFERENCES' off
         self.ref_table = args[0]
         self.ref_columns = args[1]
+
+    def __repr__(self):
+        return "Constraint: " + " ".join(map(str, (
+            self.symbol, self.index_name, self.key,
+            self.reference, self.ref_table, self.ref_columns
+        )))
 
 
 class Column:
