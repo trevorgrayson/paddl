@@ -60,17 +60,22 @@ class Constraint:
             args = args[2:]
         key_type = args[0]
 
-        if key_type in ("PRIMARY KEY", "KEY"):
+        if key_type in ("PRIMARY KEY", "UNIQUE KEY", "KEY"):
             self.reference=args[-1].asList()
             if len(args) >= 3:
                 self.index_name = args[1]
             return
-
+        if args[0] == 'UNIQUE':
+            args = args[1:]
         args = args[1:]  # shift 'FOREIGN KEY' off
-        self.key = args[0].asList()
-        args = args[2:]  # shift 'REFERENCES' off
-        self.ref_table = args[0]
-        self.ref_columns = args[1]
+        if 'REFERENCES' in args:
+            refs = args[-3:]
+            args = args [:-3]
+            self.ref_table = refs[1]
+            self.ref_columns = refs[2].asList()
+        if len(args) >= 2:
+            self.ref_columns = args[1].asList()
+        self.key = args[0]  # .asList()
 
     def __repr__(self):
         return "Constraint: " + " ".join(map(str, (

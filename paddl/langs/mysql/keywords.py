@@ -118,6 +118,7 @@ ON_UPDATE = Optional(
 # index_options
 KEY = CaselessKeyword("KEY")
 PRIMARY_KEY = CaselessKeyword("PRIMARY KEY")
+UNIQUE = CaselessKeyword('UNIQUE')
 KEY_BLOCK_SIZE = CaselessKeyword("KEY_BLOCK_SIZE")
 WITH_PARSER = CaselessKeyword("WITH PARSER")
 VISIBLE = CaselessKeyword("VISIBLE")

@@ -80,6 +80,9 @@ CONSTRAINT_PRIMARY_KEY = (
 #   | [CONSTRAINT [symbol]] UNIQUE [INDEX | KEY]
 #       [index_name] [index_type] (key_part,...)
 #       [index_option] ...
+CONSTRAINT_UNIQUE_KEY = (
+    CONSTRAINT_symbol + UNIQUE + CONSTRAINT_KEY
+)
 #   | [CONSTRAINT [symbol]] FOREIGN KEY
 #       [index_name] (col_name,...)
 #       reference_definition
@@ -96,6 +99,7 @@ CONSTRAINT_FOREIGN_KEY = (
 column_definition = MatchFirst((
     CONSTRAINT_FOREIGN_KEY,
     CONSTRAINT_PRIMARY_KEY,
+    CONSTRAINT_UNIQUE_KEY,
     CONSTRAINT_KEY,
     col_name + data_type + (NULLY & DEFAULT & ON_UPDATE),
 ))
