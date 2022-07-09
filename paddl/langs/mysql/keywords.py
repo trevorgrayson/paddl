@@ -50,14 +50,15 @@ BIGINT = CaselessKeyword("BIGINT")("data_type")+Optional(size) #	A large integer
 # FLOAT(p)	A floating point number. MySQL uses the p value to determine whether to use FLOAT or DOUBLE for the resulting data type. If p is from 0 to 24, the data type becomes FLOAT(). If p is from 25 to 53, the data type becomes DOUBLE()
 # DOUBLE(size, d)	A normal-size floating point number. The total number of digits is specified in size. The number of digits after the decimal point is specified in the d parameter
 # DOUBLE PRECISION(size, d)
-DECIMAL = CaselessKeyword("DECIMAL") + "(" + Word(nums).ignore(",") + Word(nums) + ")" #TODO optionals
+DECIMAL = CaselessKeyword("DECIMAL") + Suppress("(") + \
+          Word(nums) + Word(nums) + Suppress(")") #TODO optionals AND NO COMMA??
 # DECIMAL(size, d)	An exact fixed-point number. The total number of digits is specified in size. The number of digits after the decimal point is specified in the d parameter. The maximum number for size is 65. The maximum number for d is 30. The default value for size is 10. The default value for d is 0.
 # DEC(size, d)	Equal to DECIMAL(size,d)
 
 TICK = Optional(Suppress("`"))
 
 TITLE = Word(alphanums_)
-VALUE = Word(alphanums_ + '(' + ')' + "'" + "\"")
+VALUE = Word(alphanums_ + ".()'\"")
 DEFAULT = Optional(CaselessKeyword("DEFAULT") + VALUE("default"))
 NULLY = Optional(Optional("NOT")("not_null") + "NULL")
 INDEX = CaselessKeyword("INDEX") | CaselessKeyword("KEY") + Word(alphanums_)
@@ -66,7 +67,7 @@ tbl_name = Optional("`") + Word(alphanums+"_")("tbl_name") + Optional("`")
 key_part___ = Group(OneOrMore(TICK + Word(alphanums_) + TICK))('key_part').ignore(",")
 
 # Key Variables
-table_name = TICK + Word(alphanums)("table_name") + TICK
+table_name = TICK + Word(alphanums_)("table_name") + TICK
 col_name = TICK + Word(alphanums_)("col_name") + TICK
 
 symbol = Optional(Word(alphanums_))('symbol')
