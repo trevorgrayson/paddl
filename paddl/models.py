@@ -9,6 +9,8 @@ class ColType(Enum):
     TEXT = 'text'
     CHAR = "char"
     INT = 'int'
+    INTEGER = 'integer'
+    DOUBLE = 'double'
     DECIMAL = 'decimal'
     DATETIME = 'datetime'
     DATE = 'date'
